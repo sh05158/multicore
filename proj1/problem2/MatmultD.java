@@ -1,5 +1,3 @@
-package proj1.problem2;
-
 import java.util.*;
 import java.lang.*;
 
@@ -17,23 +15,44 @@ public class MatmultD
   {
     int thread_no=0;
     if (args.length==1) thread_no = Integer.valueOf(args[0]);
-    else thread_no = 1;
+    else thread_no = 2;
         
     int a[][]=readMatrix();
     int b[][]=readMatrix();
 
     long startTime = System.currentTimeMillis();
-    int[][] c=multMatrix(a,b);
+
+    ThreadforMatrix.a = a;
+    ThreadforMatrix.b = b;
+    ThreadforMatrix.ans = new int[a.length][a.length];
+
+    ArrayList<ThreadforMatrix> thread_arr = new ArrayList<ThreadforMatrix>();
+    
+    for(int i = 0; i<thread_no;i++){
+      int start = i*(a.length/thread_no);
+      int end = i == thread_no-1 ? a.length : (i+1)*(a.length/thread_no);
+      System.out.println("new thread range "+start+ " ~ "+end);
+      ThreadforMatrix thread = new ThreadforMatrix(start,end, a.length);
+      thread_arr.add(thread);
+      thread.start();
+
+    }
+
+    for(int i = 0;i<thread_arr.size();i++){
+      try {
+        thread_arr.get(i).join();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+
     long endTime = System.currentTimeMillis();
 
-    //printMatrix(a);
-    //printMatrix(b);    
-    printMatrix(c);
-
-    //System.out.printf("thread_no: %d\n" , thread_no);
-    //System.out.printf("Calculation Time: %d ms\n" , endTime-startTime);
-
     System.out.printf("[thread_no]:%2d , [Time]:%4d ms\n", thread_no, endTime-startTime);
+
+    // printMatrix(ThreadforMatrix.ans);
+
+
   }
 
    public static int[][] readMatrix() {
@@ -63,23 +82,42 @@ public class MatmultD
     System.out.println();
     System.out.println("Matrix Sum = " + sum + "\n");
   }
+}
 
-  public static int[][] multMatrix(int a[][], int b[][]){//a[m][n], b[n][p]
-    if(a.length == 0) return new int[0][0];
-    if(a[0].length != b.length) return null; //invalid dims
+class ThreadforMatrix extends Thread {
+  static int a[][];
+  static int b[][];
+
+  static int ans[][];
+  
+  int start;
+  int end;
+
+
+  ThreadforMatrix(int start, int end, int size){
+    this.start = start;
+    this.end = end;
+  }
+
+  public void run(){
+    long startTime = System.currentTimeMillis();
 
     int n = a[0].length;
     int m = a.length;
     int p = b[0].length;
-    int ans[][] = new int[m][p];
 
-    for(int i = 0;i < m;i++){
+    for(int i = this.start;i < this.end;i++){
       for(int j = 0;j < p;j++){
         for(int k = 0;k < n;k++){
           ans[i][j] += a[i][k] * b[k][j];
         }
       }
     }
-    return ans;
+
+    long endTime = System.currentTimeMillis();
+    long timeDiff = endTime - startTime;
+
+    System.out.println(this.getName()+" Execution Time: "+timeDiff+"ms");
   }
+
 }

@@ -1,5 +1,3 @@
-package proj1.problem1;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
@@ -81,7 +79,7 @@ class DynamicThread extends Thread {
     problem.add(num);
   }
 
-  public synchronized void work(){
+  public void work(){
     int currWork = 0;
     while(true){
       currWork=getWork();

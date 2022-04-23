@@ -1,5 +1,3 @@
-package proj1.problem1;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
