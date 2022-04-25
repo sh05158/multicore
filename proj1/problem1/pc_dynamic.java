@@ -12,6 +12,9 @@ public class pc_dynamic {
       NUM_END = Integer.parseInt(args[1]);
     }
 
+    NUM_THREADS = 16;
+    NUM_END = 200000;
+
     int[] problem = new int[NUM_END];
     for(int i = 0; i<NUM_END;i++){
       problem[i] = i;
@@ -32,13 +35,9 @@ public class pc_dynamic {
     }
 
 
-    int k = 0;
+    DynamicThread.p = problem;
+    DynamicThread.end = NUM_END;
 
-    while(k<=NUM_END){
-      // thread_arr.get(k%NUM_THREADS).addWork(k++);
-      DynamicThread.addWork(k++);
-    }
-    System.out.println(DynamicThread.problem.size());
     
     for(int i = 0;i<thread_arr.size();i++){
       thread_arr.get(i).start();
@@ -59,13 +58,16 @@ public class pc_dynamic {
     long timeDiff = endTime - startTime;
 
     System.out.println("Program Execution Time: "+timeDiff+"ms");
-    System.out.println("1..."+(NUM_END-1)+" prime# counter=" + counter);
+    System.out.println("1..."+(NUM_END)+" prime# counter=" + counter);
   }
 
 }
 
 class DynamicThread extends Thread {
   static ArrayList<Integer> problem = new ArrayList<Integer>();
+  static int[] p;
+  static int index = 0;
+  static int end = 0;
   int primeCount = 0;
   long startTime = System.currentTimeMillis();
   private Lock lock;
@@ -80,18 +82,32 @@ class DynamicThread extends Thread {
   }
 
   public void work(){
-    int currWork = 0;
     while(true){
-      currWork=getWork();
-      if(currWork == -1){
+      lock.lock();
+      if(index >= end){
+        lock.unlock();
         break;
       }
-      if( isPrime(currWork) ){
+      int curr = p[index++];
+      lock.unlock();
+      // System.out.println(this.getName() + " : " +p[curr]);
+      if( isPrime(p[curr]) ){
         primeCount++;
       }
+    
+    // int currWork = 0;
+    // while(true){
+    //   currWork=getWork();
+    //   if(currWork == -1){
+    //     break;
+    //   }
+    //   if( isPrime(currWork) ){
+    //     primeCount++;
+    //   }
+    // }
     }
-
   }
+  
 
   public int getWork(){
     lock.lock();
@@ -113,7 +129,7 @@ class DynamicThread extends Thread {
   }
 
   public void run(){
-    System.out.println(this.getName()+" start! work size = "+problem.size());
+    System.out.println(this.getName()+" startss! work size = "+problem.size());
 
     work();
 
