@@ -12,9 +12,6 @@ public class pc_dynamic {
       NUM_END = Integer.parseInt(args[1]);
     }
 
-    NUM_THREADS = 16;
-    NUM_END = 200000;
-
     int[] problem = new int[NUM_END];
     for(int i = 0; i<NUM_END;i++){
       problem[i] = i;
@@ -90,21 +87,11 @@ class DynamicThread extends Thread {
       }
       int curr = p[index++];
       lock.unlock();
-      // System.out.println(this.getName() + " : " +p[curr]);
       if( isPrime(p[curr]) ){
         primeCount++;
       }
     
-    // int currWork = 0;
-    // while(true){
-    //   currWork=getWork();
-    //   if(currWork == -1){
-    //     break;
-    //   }
-    //   if( isPrime(currWork) ){
-    //     primeCount++;
-    //   }
-    // }
+
     }
   }
   
@@ -129,8 +116,6 @@ class DynamicThread extends Thread {
   }
 
   public void run(){
-    System.out.println(this.getName()+" startss! work size = "+problem.size());
-
     work();
 
     long endTime = System.currentTimeMillis();
@@ -140,7 +125,6 @@ class DynamicThread extends Thread {
   }
 
   public int getResult(){
-    // System.out.println(this.getName()+ " calculated prime count= "+primeCount);
     return primeCount;
   }
 

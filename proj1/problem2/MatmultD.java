@@ -50,7 +50,7 @@ public class MatmultD
 
     System.out.printf("[thread_no]:%2d , [Time]:%4d ms\n", thread_no, endTime-startTime);
 
-    // printMatrix(ThreadforMatrix.ans);
+    printMatrix(ThreadforMatrix.ans);
 
 
   }
@@ -74,12 +74,12 @@ public class MatmultD
     int sum = 0;
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
-        System.out.printf("%4d " , mat[i][j]);
+        // System.out.printf("%4d " , mat[i][j]);
         sum+=mat[i][j];
       }
-      System.out.println();
+      // System.out.println();
     }
-    System.out.println();
+    // System.out.println();
     System.out.println("Matrix Sum = " + sum + "\n");
   }
 }
