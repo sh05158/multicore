@@ -2,6 +2,16 @@ package proj2.prob2;
 
 import java.util.concurrent.Semaphore;
 
+public class ParkingSemaphore {
+  public static void main(String[] args){
+    ParkingGarage parkingGarage = new ParkingGarage(7);
+    for (int i=1; i<= 10; i++) {
+      Car c = new Car("Car "+i, parkingGarage);
+    }
+  }
+}
+
+
 class ParkingGarage {
     private final Semaphore sema;
     private int places;
@@ -81,13 +91,4 @@ class ParkingGarage {
     }
   }
   
-  
-  public class ParkingSemaphore {
-    public static void main(String[] args){
-      ParkingGarage parkingGarage = new ParkingGarage(7);
-      for (int i=1; i<= 10; i++) {
-        Car c = new Car("Car "+i, parkingGarage);
-      }
-    }
-  }
   

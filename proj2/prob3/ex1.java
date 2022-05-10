@@ -49,7 +49,7 @@ class FoodFactory implements Runnable{
                  System.out.println("Factory produce Done. Current :"+storage);
             
             
-                 Thread.sleep((int)(Math.random()*5000));
+                 Thread.sleep((int)(Math.random()*4000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

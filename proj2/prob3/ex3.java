@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
   
-// Class 1
-// Main class
 public class ex3 {
   
     public static AtomicInteger a = new AtomicInteger(1);
@@ -15,7 +13,6 @@ public class ex3 {
         primeCalculator.max = 100000;
         primeCalculator.primeCount.set(0);
 
-         // Creating threads
          ArrayList<Thread> th = new ArrayList<Thread>();
 
          for(var i = 0; i<10; i++){
