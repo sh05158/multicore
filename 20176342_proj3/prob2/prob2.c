@@ -8,82 +8,87 @@
 
 int isPrime(int);
 
+long num_steps = 10000000;
+//double step;
+
 int main (int argc, char** args)
 {
+
+    struct timespec start2, end2;
     struct timespec start, end;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 //do stuff
 
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start2);
 
 
     int num_threads;
-    int num_end = 200000;
+    double step = 1.0/(double) num_steps;
 
-	int i;
-    int primeCount = 0;
-	omp_set_num_threads(atoi(args[2]));
-    num_threads = atoi(args[2]);
+	omp_set_num_threads(atoi(args[3]));
+    num_threads = atoi(args[3]);
+    long i; double x, pi,sum = 0;
+
     printf("program starts!\n");
-    printf("Thread num = %d , Option = %d\n",atoi(args[2]),atoi(args[1]));
+    printf("schedule = %d , chunk_size = %d, num_threads = %d \n",atoi(args[1]),atoi(args[2]),atoi(args[3]));
+
 
     int option = atoi(args[1]);
+    int chunkSize = atoi(args[2]);
+
+
+
+
+
     switch(option){
         //static with default chunk size
         case 1:
-            #pragma omp parallel for schedule(static)
-            for (i = 0; i < num_end; i++) {
-//                int target = omp_get_thread_num()*(num_end/num_threads)+1;
-                isPrime(i) == 1 && primeCount++;
 
-//                printf("i=%d (%d/%d)   %d\n",i,omp_get_thread_num(),omp_get_num_threads(), target);
+#pragma omp parallel for schedule(static, chunkSize) private(x) reduction (+:sum)
+            for (i = 0; i < num_steps; i++) {
+                x = (i + 0.5) * step;
+                sum +=  4.0 / (1.0 + x * x);
             }
+
+
+
             break;
 
         case 2:
-            #pragma omp parallel for schedule(dynamic)
-            for (i = 0; i < num_end; i++) {
-//                int target = omp_get_thread_num()*(num_end/num_threads)+1;
-                isPrime(i) == 1 && primeCount++;
 
-//                printf("i=%d (%d/%d)   %d\n",i,omp_get_thread_num(),omp_get_num_threads(), target);
+#pragma omp parallel for schedule(dynamic, chunkSize) private(x) reduction (+:sum)
+            for (i = 0; i < num_steps; i++) {
+                x = (i + 0.5) * step;
+                sum +=  4.0 / (1.0 + x * x);
             }
+
+
+
             break;
         case 3:
-            #pragma omp parallel for schedule(static,10)
-            for (i = 0; i < num_end; i++) {
-//                int target = omp_get_thread_num()*(num_end/num_threads)+1;
-                isPrime(i) == 1 && primeCount++;
 
-//                printf("i=%d (%d/%d)   %d\n",i,omp_get_thread_num(),omp_get_num_threads(), target);
+#pragma omp parallel for schedule(guided, chunkSize) private(x) reduction (+:sum)
+            for (i = 0; i < num_steps; i++) {
+                x = (i + 0.5) * step;
+                sum += 4.0 / (1.0 + x * x);
             }
-            break;
-        case 4:
-            #pragma omp parallel for schedule(dynamic,10)
-            for (i = 0; i < num_end; i++) {
-//                int target = omp_get_thread_num()*(num_end/num_threads)+1;
-                isPrime(i) == 1 && primeCount++;
 
-//                printf("i=%d (%d/%d)   %d\n",i,omp_get_thread_num(),omp_get_num_threads(), target);
-            }
+
+
+
             break;
 
     }
 
-    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
-	printf("program ends! prime count = %d\n",primeCount);
+    pi = sum*step;
 
-    uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000;
+
+    printf("pi=%.24lf\n",pi);
+
+    clock_gettime(CLOCK_MONOTONIC_RAW, &end2);
+
+    uint64_t delta_us = (end2.tv_sec - start2.tv_sec) * 1000000 + (end2.tv_nsec - start2.tv_nsec) / 1000;
     printf("execution time  %lu ms\n",delta_us/1000);
 
 	return 1;
-}
-
-int isPrime(int x){
-    int i;
-    if(x<=1) return 0;
-    for(i=2;i<x;i++){
-        if(x%i == 0) return 0;
-    }
-    return 1;
 }
