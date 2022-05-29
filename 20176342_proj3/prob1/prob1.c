@@ -30,7 +30,7 @@ int main (int argc, char** args)
     switch(option){
         //static with default chunk size
         case 1:
-            #pragma omp parallel for schedule(static)
+            #pragma omp parallel for schedule(static) reduction (+:primeCount)
             for (i = 0; i < num_end; i++) {
 //                int target = omp_get_thread_num()*(num_end/num_threads)+1;
                 isPrime(i) == 1 && primeCount++;
@@ -40,7 +40,7 @@ int main (int argc, char** args)
             break;
 
         case 2:
-            #pragma omp parallel for schedule(dynamic)
+            #pragma omp parallel for schedule(dynamic) reduction (+:primeCount)
             for (i = 0; i < num_end; i++) {
 //                int target = omp_get_thread_num()*(num_end/num_threads)+1;
                 isPrime(i) == 1 && primeCount++;
@@ -49,7 +49,7 @@ int main (int argc, char** args)
             }
             break;
         case 3:
-            #pragma omp parallel for schedule(static,10)
+            #pragma omp parallel for schedule(static,10) reduction (+:primeCount)
             for (i = 0; i < num_end; i++) {
 //                int target = omp_get_thread_num()*(num_end/num_threads)+1;
                 isPrime(i) == 1 && primeCount++;
@@ -58,7 +58,7 @@ int main (int argc, char** args)
             }
             break;
         case 4:
-            #pragma omp parallel for schedule(dynamic,10)
+            #pragma omp parallel for schedule(dynamic,10) reduction (+:primeCount)
             for (i = 0; i < num_end; i++) {
 //                int target = omp_get_thread_num()*(num_end/num_threads)+1;
                 isPrime(i) == 1 && primeCount++;

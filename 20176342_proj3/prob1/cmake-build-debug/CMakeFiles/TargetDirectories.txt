@@ -1,3 +1,0 @@
-/mnt/c/Users/song/multicore/20176342_proj3/prob1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/song/multicore/20176342_proj3/prob1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/song/multicore/20176342_proj3/prob1/cmake-build-debug/CMakeFiles/prob1.dir
